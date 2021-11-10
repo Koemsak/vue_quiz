@@ -6,7 +6,7 @@ new Vue ({
         title: '',
         body: '',
         isEdit: false,
-        id: null
+        id: 0
     },
     methods: {
         getBook() {
@@ -22,10 +22,14 @@ new Vue ({
                 author_id: parseInt(this.author_id),
                 title: this.title,
                 body: this.body,
-            }
+            };
             window.axios.post(url, data).then(response => {
                 this.books = response.data.data;
                 this.getBook();
+                this.author_id =  null;
+                this.title = "";
+                this.body = "";
+                this.isEdit = false;
             });
         },
         deleteBook(book) {
@@ -44,8 +48,13 @@ new Vue ({
                 body: this.body,
             }
             window.axios.put(url + this.id, newData).then(response => {
-                this.getTodo();
+                this.books = response.data.data;
+                this.getBook();
             })
+            this.getBook();
+            this.author_id =  null;
+            this.title = "";
+            this.body = "";
             this.isEdit = false;
         },
         clickEdit(book) {
@@ -54,7 +63,6 @@ new Vue ({
             this.title = book.title;
             this.body = book.body;
             this.isEdit = true;
-
         }
     },
     mounted: function() {
